@@ -15,7 +15,12 @@ jobs:
           distribution: temurin
           java-version: '17'
 
-      - uses: android-actions/setup-android@v3
+      - name: Accept Android SDK licenses (SDK is preinstalled on the runner)
+        run: |
+          export ANDROID_HOME="${ANDROID_HOME:-/usr/local/lib/android/sdk}"
+          mkdir -p "$ANDROID_HOME/licenses"
+          yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses > /dev/null || true
+          echo "sdk.dir=$ANDROID_HOME" > local.properties
 
       - uses: gradle/actions/setup-gradle@v4
         with:
